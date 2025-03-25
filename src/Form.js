@@ -9,6 +9,7 @@ import TextareaField from './fields/TextareaField';
 import CheckboxField from './fields/CheckboxField';
 import RadioField from './fields/RadioField';
 import GroupField from './fields/GroupField';
+import TextField from './fields/TextField';
 
 const mappings = {
   textarea: TextareaField,
@@ -16,7 +17,8 @@ const mappings = {
   text: InputField,
   checkbox: CheckboxField,
   radio: RadioField,
-  group: GroupField
+  group: GroupField,
+  context: TextField,
 };
 
 function App() {
@@ -108,7 +110,16 @@ function App() {
       validate: {},
       type: 'group',
       text: 'Radio',
-
+    },
+    {
+      label: 'Text',
+      placeholder: '',
+      id: "",
+      name: "",
+      validate: {},
+      type: 'context',
+      content: 'This is the content',
+      text: 'Radio',
     }
   ]);
 
