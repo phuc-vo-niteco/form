@@ -45,6 +45,7 @@
                 display: block;
                 cursor: pointer;
             }
+
             .choose-col {
                 display: flex;
             }
@@ -96,6 +97,7 @@
         background-color: #fff;
         padding: 10px;
         min-height: 100vh;
+
         .form-setting-item {
             background: #ecf6ff;
             padding: 5px 5px 5px 10px;
@@ -158,25 +160,35 @@
         z-index: 100;
 
         svg {
-            width: 14px;
+            width: 30px;
         }
     }
 
     .form-setting-item {
-        &:hover {
-            .form-plus-overload {
-                display: flex !important;
-                --header--mobile-menu-height: 100svh;
-                backdrop-filter: blur(.25rem);
-                -webkit-backdrop-filter: blur(.25rem);
-                background: linear-gradient(180deg,transparent,hsla(0,0%,100%,.6));
-                box-shadow: 0 .0625rem 0 0 #e9ecf9
-            }
+        svg {
+            fill: #6bb4ff;
+            width: 30px;
+        }
+
+        .form-plus-overload {
+            display: none;
 
             svg {
-                width: 30px;
-                height: 30px;
+                width: 20px;
+                height: 20px;
                 fill: #25c87d;
+            }
+        }
+
+        &:hover {
+            .form-plus-overload {
+                display: block;
+                display: flex !important;
+                --header--mobile-menu-height: 100svh;
+                backdrop-filter: blur(.03rem);
+                -webkit-backdrop-filter: blur(.25rem);
+                background: linear-gradient(180deg, transparent, hsla(0, 0%, 100%, .6));
+                box-shadow: 0 .0625rem 0 0 #e9ecf9
             }
         }
     }
@@ -274,6 +286,10 @@
 .content-input {
     position: relative;
     flex: 1;
+}
+
+.form-control {
+    border-radius: 0;
 }
 
 // .form-group {

@@ -110,5 +110,5 @@ export const addOn = [
         validate: {},
         type: 'editor',
         content: 'This is the content',
-    }
+    },
 ];

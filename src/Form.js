@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import config from './config';
 import Icons from "./fields/Icons";
-import Components, {addOn} from "./fields";
+import Components, { addOn } from "./fields";
 import './App.css';
 import './Form.scss';
 
 function App() {
-  const [data, setData] = useState({});
   const formRef = useRef(null);
+
+  const [data, setData] = useState({});
   const [form, setForm] = useState(JSON.parse(window.localStorage.getItem('form')) || config.form);
   const [formSettings] = useState(addOn);
 
@@ -41,7 +42,7 @@ function App() {
   });
 
   const component = ({ item, index, onConfig }) => {
-    const Component = Components[item.type] || Components.text;
+    const { Component } = (Components[item.type] || Components.text);
     return <Component
       {...item}
       index={index}
@@ -52,6 +53,17 @@ function App() {
       }} />
   }
 
+  const preview = ({ item, index, onConfig }) => {
+    const { Preview } = (Components[item.type] || Components.text);
+    return <Preview
+      {...item}
+      index={index}
+      onConfig={onConfig}
+      onChange={(event) => {
+        saveValue(event, item);
+        onValidate(event, item);
+      }} />
+  };
 
   const saveValue = (event, item) => {
     if (item.type === 'checkbox') {
@@ -59,14 +71,15 @@ function App() {
     } else {
       item.value = event.target.value;
     }
-  }
+  };
 
   const onValidate = (event, item) => {
     // form.forEach(item => {
     //   _validate(item)
     // });
     _validate(item)
-  }
+  };
+
   const _validate = (item) => {
     if (!item.validate) {
       return;
@@ -78,7 +91,7 @@ function App() {
         item.message = '';
       }
     }
-  }
+  };
 
   useEffect(() => {
     console.log('data', data);
@@ -109,7 +122,7 @@ function App() {
     // e.dataTransfer.setDragImage(e.target.parentNode, 20, 20);
   };
 
-  const onDragStartCreate = (e, index) => {
+  const addField = (e, index) => {
     e.preventDefault();
     setForm(() => {
       const _item = Object.assign({}, formSettings[index]);
@@ -134,7 +147,6 @@ function App() {
     const _form = form.filter(item => item !== draggedItem);
     _form.splice(index, 0, draggedItem);
     setForm(_form);
-
   };
 
   const onDragEnd = () => {
@@ -150,7 +162,7 @@ function App() {
     const _form = Array.from(form);
     _form[index].col = col;
     setForm([..._form]);
-  }
+  };
 
   return (
     <div className="_App container">
@@ -176,13 +188,13 @@ function App() {
 
                     return (
                       <div
-                        onClick={(event) => onDragStartCreate(event, index)}
+                        onClick={(event) => addField(event, index)}
                         key={item.id} className={`form-setting-item form-group form-col-${item.col || 12}`}>
                         <div className='form-plus-overload'>
                           <Icons.PlusCircle />
                         </div>
-                        {item.label && <label className='form-label' for={item.id + '-create'}>{item.label}</label>}
-                        {component({ item, index, onConfig: null })}
+                        {preview({ item, index })}
+                        {item.label && <label className='form-label' for={item.id}>{item.label}</label>}
                       </div>
                     )
                   })
@@ -199,20 +211,21 @@ function App() {
                   <div className="form-row">
                     {
                       form.map((item, index) => {
-
                         return (
                           <div draggable
+                            style={index === fieldConfigIndex ? { outline: '2px solid #d1e7ff', borderColor: '#fff' } : {}}
                             onDragOver={() => onDragOver(index)}
                             onDragStart={(event) => onDragStart(event, index)}
                             onDragEnd={onDragEnd}
                             key={index} className={`form-group form-col-${item.col || 12}`}>
-                              {
-                                [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].reverse().map((col) => {
-                                  return (
-                                    <div className={`choose-col choose-col-${col}`} style={{ width: (col / 12) * 100 + '%' }} onClick={() => choseCol(index, col)}>{col}</div>
-                                  )
-                                })
-                              }
+                            {
+                              [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].reverse().map((col) => {
+                                return (
+                                  <div className={`choose-col choose-col-${col}`} style={{ width: (col / 12) * 100 + '%' }} onClick={() => choseCol(index, col)}>{col}</div>
+                                )
+                              })
+                            }
+                            <span style={{ width: '20px', display: 'inline-table' }}>{preview({ item, index, onConfig })}</span>
                             {item.label && <label className='form-label' for={item.id}>{item.label}</label>}
                             {component({ item, index, onConfig })}
                           </div>
@@ -238,6 +251,7 @@ function App() {
                     fieldConfig.map((item, index) => {
                       return (
                         <div
+
                           key={item.id}
                           className={`form-setting-config form-group form-col-12`}>
                           {item.label && <label className='form-label' for={item.id + '-config'}>{item.label}</label>}
