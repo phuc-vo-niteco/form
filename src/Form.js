@@ -1,127 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
 import config from './config';
 import Icons from "./fields/Icons";
+import Components, {addOn} from "./fields";
 import './App.css';
 import './Form.scss';
-import InputField from './fields/InputField';
-import SelectField from './fields/SelectField';
-import TextareaField from './fields/TextareaField';
-import CheckboxField from './fields/CheckboxField';
-import RadioField from './fields/RadioField';
-import GroupField from './fields/GroupField';
-import TextField from './fields/TextField';
-
-const mappings = {
-  textarea: TextareaField,
-  select: SelectField,
-  text: InputField,
-  checkbox: CheckboxField,
-  radio: RadioField,
-  group: GroupField,
-  context: TextField,
-};
 
 function App() {
   const [data, setData] = useState({});
   const formRef = useRef(null);
   const [form, setForm] = useState(JSON.parse(window.localStorage.getItem('form')) || config.form);
-  const [formSettings, setFormSettings] = useState([
-    {
-      label: 'Text Input',
-      value: '',
-      placeholder: '',
-      id: "",
-      name: "",
-      validate: {
-        required: true
-      },
-      type: 'text',
-    },
-    {
-      label: 'Select',
-      value: '',
-      placeholder: '',
-      id: "",
-      name: "",
-      validate: {},
-      type: 'select',
-      options: [
-        {
-          label: 'Option 1',
-          value: 'option1'
-        },
-        {
-          label: 'Option 2',
-          value: 'option2'
-        }
-      ],
-    },
-    {
-      label: 'Text Area',
-      value: '',
-      placeholder: '',
-      id: "",
-      name: "",
-      validate: {},
-      type: 'textarea',
-    },
-    {
-      label: 'Checkbox',
-      value: '',
-      placeholder: '',
-      id: "",
-      name: "",
-      validate: {},
-      checked: false,
-      type: 'checkbox',
-      text: 'Checkbox',
-    },
-    {
-      label: 'Radio',
-      value: '',
-      placeholder: '',
-      id: "",
-      name: "",
-      validate: {},
-      type: 'radio',
-      text: 'Radio',
-      options: [
-        {
-          label: 'Option 1',
-          value: 'option1'
-        },
-        {
-          label: 'Option 2',
-          value: 'option2'
-        }
-      ],
-    },
-    {
-      label: 'Group',
-      value: [
-        {
-          label: 'Option 1',
-          value: 'option1'
-        },
-      ],
-      placeholder: '',
-      id: "",
-      name: "",
-      validate: {},
-      type: 'group',
-      text: 'Radio',
-    },
-    {
-      label: 'Text',
-      placeholder: '',
-      id: "",
-      name: "",
-      validate: {},
-      type: 'context',
-      content: 'This is the content',
-      text: 'Radio',
-    }
-  ]);
+  const [formSettings] = useState(addOn);
 
   const [fieldConfig, setFieldConfig] = useState([]);
   const [fieldConfigIndex, setFieldConfigIndex] = useState(null);
@@ -152,16 +40,11 @@ function App() {
     return Array.from(form).filter((_, index) => index != fieldConfigIndex);
   });
 
-  const component = ({ item, id = '', index, onConfig }) => {
-    console.log('component', index);
-
-    const _id = item.id;
-
-    const _component = mappings[item.type] || mappings.text;
-    return <_component
+  const component = ({ item, index, onConfig }) => {
+    const Component = Components[item.type] || Components.text;
+    return <Component
       {...item}
       index={index}
-      id={_id + id}
       onConfig={onConfig}
       onChange={(event) => {
         saveValue(event, item);
@@ -270,8 +153,7 @@ function App() {
   }
 
   return (
-    <div className="_App">
-      <h3>Form </h3>
+    <div className="_App container">
       <form ref={formRef} onChange={(e) => {
         const { name, value } = e.target;
         console.log(formRef);
@@ -287,8 +169,8 @@ function App() {
 
           {/* Collection */}
           <div className='col-3'>
-            <div className='card form-setting'>
-              <div className="card-body">
+            <div className='form-setting'>
+              <div className="">
                 {
                   formSettings.map((item, index) => {
 
@@ -300,20 +182,19 @@ function App() {
                           <Icons.PlusCircle />
                         </div>
                         {item.label && <label className='form-label' for={item.id + '-create'}>{item.label}</label>}
-                        {component({ item, id: '-create', index, onConfig: null })}
+                        {component({ item, index, onConfig: null })}
                       </div>
                     )
                   })
                 }
               </div>
-
             </div>
           </div>
 
           {/* Preview Form */}
           <div className='col-6'>
-            <div className="card">
-              <div className="card-body">
+            <div className="form-content">
+              <div className="">
                 <div className="form-container">
                   <div className="form-row">
                     {
@@ -341,40 +222,39 @@ function App() {
                   </div>
                 </div>
               </div>
-              <div className="card-footer">
-                <button type="submit" className="btn btn-primary btn-sm">Submit</button>
+              <div className='my-3'>
+                <button type="submit" className="btn btn-primary btn-sm rounded-0">Submit</button>
               </div>
             </div>
           </div>
 
           {/* Right container */}
           <div className='col-3' style={{ display: fieldConfig.length > 0 ? 'block' : 'none' }}>
-            <div className='card'>
-              <div className="card-body">
+            <div className='config-about'>
+              <div className="">
                 <h5 className='d-flex align-items-center text-primary'><Icons.Sliders /><span className='mx-2'>Settings</span></h5>
                 <div className='form-data'>
                   {
                     fieldConfig.map((item, index) => {
-
                       return (
                         <div
                           key={item.id}
                           className={`form-setting-config form-group form-col-12`}>
                           {item.label && <label className='form-label' for={item.id + '-config'}>{item.label}</label>}
-                          {component({ item, index, id: '-config', onConfig: null })}
+                          {component({ item, index, onConfig: null })}
                         </div>
                       )
                     })
                   }
                 </div>
               </div>
-              <div className='card-footer'>
+              <div className='my-3'>
                 <button type="button"
-                  onClick={onSaveFieldConfig} className="btn btn-primary btn-sm">
+                  onClick={onSaveFieldConfig} className="btn btn-primary btn-sm rounded-0">
                   Save
                 </button>
                 <button type="button"
-                  onClick={onDeleteFieldConfig} className="btn btn-danger btn-sm mx-1">
+                  onClick={onDeleteFieldConfig} className="btn btn-danger btn-sm mx-1 rounded-0">
                   Delete
                 </button>
               </div>

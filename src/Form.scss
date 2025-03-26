@@ -1,8 +1,4 @@
 ._App {
-    background-color: #eee;
-    padding: 20px;
-    border: 1px solid rgba(0, 0, 0, 0.04);
-    border-radius: 10px;
 
     .form-container {
         position: relative;
@@ -13,34 +9,44 @@
         flex-wrap: wrap;
     }
 
-    .card-body {
-        background: rgba(0, 0, 0, 0.025);
-    }
-
     @for $i from 1 through 12 {
         .form-col-#{$i} {
             width: calc(#{$i / 12} * 100%);
         }
     }
 
+    .config-about {
+        min-height: 100vh;
+        padding: 10px;
+    }
+
+    .form-content {
+        border-left: 2px solid #f4f5f9;
+        border-right: 2px solid #f4f5f9;
+        padding: 20px 40px;
+        min-height: 100vh;
+    }
+
     .form-group {
         margin-top: 15px;
-        padding: 0 5px;
+        padding: 5px;
         // transition: 300ms;
 
         input {}
 
         margin-top: 15px;
-        border: 1px dashed #dddddd60;
+        border: 1px dashed rgb(209 231 255);
 
         &:hover {
-            background-color: rgba(0, 0, 0, 0.021);
-            // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: rgba(209, 231, 255, 0.15);
             z-index: 10000;
 
             .choose-col-bar {
                 display: block;
                 cursor: pointer;
+            }
+            .choose-col {
+                display: flex;
             }
         }
 
@@ -70,6 +76,7 @@
             margin-left: -5px;
             z-index: 100;
             cursor: pointer;
+            display: none;
 
             &:hover {
                 background-color: #3f51b57e !important;
@@ -86,21 +93,18 @@
     }
 
     .form-setting {
+        background-color: #fff;
+        padding: 10px;
+        min-height: 100vh;
         .form-setting-item {
-            background: #fafafa;
+            background: #ecf6ff;
             padding: 5px 5px 5px 10px;
             cursor: pointer;
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            border: 2px dashed #d1e7ff;
             position: relative;
 
-            &::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 4px;
-                height: 100%;
-                background: #3f51b5;
+            .form-label {
+                color: #6bb4ff;
             }
         }
     }
@@ -138,9 +142,10 @@
     }
 
     .btn-setting {
-        position: absolute;
-        top: -25px;
-        right: 0;
+        // position: absolute;
+        float: right;
+        // top: 0;
+        // right: 0;
         z-index: 10;
         display: block;
         padding: .15rem .5rem;
@@ -149,6 +154,8 @@
         background-color: #fff;
         border: none;
         border-radius: .25rem;
+        position: relative;
+        z-index: 100;
 
         svg {
             width: 14px;
@@ -159,7 +166,11 @@
         &:hover {
             .form-plus-overload {
                 display: flex !important;
-                background-color: rgba(0, 0, 0, 0.14);
+                --header--mobile-menu-height: 100svh;
+                backdrop-filter: blur(.25rem);
+                -webkit-backdrop-filter: blur(.25rem);
+                background: linear-gradient(180deg,transparent,hsla(0,0%,100%,.6));
+                box-shadow: 0 .0625rem 0 0 #e9ecf9
             }
 
             svg {
@@ -177,7 +188,7 @@
     width: calc(100% - 4px);
     height: 100%;
     z-index: 1000;
-    left: 4px;
+    left: 0px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -208,7 +219,7 @@
         }
 
         &:nth-child(even) {
-            background: #eee;
+            background: rgba(209, 231, 255, 0.15);
         }
 
         .field-group-item-title {
